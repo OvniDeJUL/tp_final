@@ -1,0 +1,54 @@
+{
+  "name": "caisse-epicerie",
+  "version": "1.0.0",
+  "description": "Point-of-sale desktop app for neighborhood grocery store",
+  "main": "main.js",
+  "scripts": {
+    "start": "node launch.js",
+    "build": "electron-builder",
+    "test": "jest",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9",
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3",
+    "electron-log": "^5.1.2",
+    "electron-store": "^8.1.0",
+    "pdfkit": "^0.19.1"
+  },
+  "build": {
+    "appId": "com.epicerie.caisse",
+    "productName": "Caisse Épicerie",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "launch.js",
+      "src/**/*",
+      "!tests/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "mac": {
+      "target": "dmg"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  }
+}

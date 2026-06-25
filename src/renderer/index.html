@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; img-src 'self' https://images.openfoodfacts.org data:; style-src 'self' 'unsafe-inline'" />
+  <title>Caisse Épicerie</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <h1 id="app-title" data-i18n="app_title">Caisse Épicerie</h1>
+  <button class="active" data-page="catalog" data-i18n="nav_catalog">Catalogue</button>
+  <button data-page="pos" data-i18n="nav_pos">Caisse</button>
+  <button data-page="history" data-i18n="nav_history">Historique</button>
+  <button data-page="settings" data-i18n="nav_settings">Paramètres</button>
+</nav>
+
+<!-- ══════════════════════════
+     PAGE: CATALOGUE
+══════════════════════════ -->
+<main id="page-catalog" class="page active">
+  <div class="toolbar">
+    <input id="catalog-search" type="search" data-i18n-placeholder="search_placeholder" placeholder="Rechercher..." />
+    <button class="btn btn-primary" id="btn-show-add-form" data-i18n="add_product">Ajouter produit</button>
+  </div>
+
+  <!-- Add/Edit form -->
+  <div class="panel" id="product-form-panel" style="display:none">
+    <form id="product-form">
+      <div>
+        <label data-i18n="barcode">Code-barres</label>
+        <input id="f-barcode" type="text" placeholder="ex: 3017620422003" />
+      </div>
+      <div>
+        <label data-i18n="name">Nom</label>
+        <input id="f-name" type="text" required />
+      </div>
+      <div>
+        <label data-i18n="price">Prix (€)</label>
+        <input id="f-price" type="number" step="0.01" min="0" required />
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:8px">
+        <button type="button" class="btn btn-ghost btn-sm" id="btn-lookup" data-i18n="lookup">
+          Rechercher OpenFoodFacts
+        </button>
+        <span id="lookup-status" style="font-size:12px;color:var(--text-muted)"></span>
+      </div>
+      <input type="hidden" id="f-edit-id" />
+      <div class="actions full">
+        <button type="button" class="btn btn-ghost" id="btn-cancel-form" data-i18n="cancel">Annuler</button>
+        <button type="submit" class="btn btn-primary" id="btn-submit-form" data-i18n="save">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Products table -->
+  <div class="panel scroll">
+    <table id="catalog-table">
+      <thead>
+        <tr>
+          <th data-i18n="barcode">Code-barres</th>
+          <th data-i18n="name">Nom</th>
+          <th data-i18n="price">Prix</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="catalog-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- ══════════════════════════
+     PAGE: CAISSE (POS)
+══════════════════════════ -->
+<main id="page-pos" class="page">
+  <div id="pos-search-panel">
+    <div class="toolbar">
+      <input id="pos-search" type="search" data-i18n-placeholder="search_placeholder" placeholder="Rechercher..." />
+    </div>
+    <div class="panel scroll">
+      <table id="pos-product-table">
+        <thead>
+          <tr>
+            <th data-i18n="name">Nom</th>
+            <th data-i18n="price">Prix</th>
+            <th data-i18n="qty_label">Quantité</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="pos-product-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="cart-panel" class="panel">
+    <h2 data-i18n="cart_title">Panier</h2>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-i18n="name">Nom</th>
+            <th data-i18n="qty">Qté</th>
+            <th data-i18n="price">Prix</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="cart-items"></tbody>
+      </table>
+    </div>
+    <div id="cart-footer">
+      <div id="cart-total"><span data-i18n="total">Total</span> : <strong id="cart-total-value">0.00 €</strong></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" id="btn-clear-cart" data-i18n="clear_cart">Vider</button>
+        <button class="btn btn-primary" id="btn-validate-sale" style="flex:1" data-i18n="validate_sale">Valider la vente</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════
+     PAGE: HISTORIQUE
+══════════════════════════ -->
+<main id="page-history" class="page">
+  <div class="toolbar">
+    <div>
+      <label data-i18n="date_label">Date</label>
+      <input type="date" id="history-date" />
+    </div>
+    <button class="btn btn-ghost" id="btn-export-csv" data-i18n="export_csv">Exporter CSV</button>
+    <button class="btn btn-ghost" id="btn-export-pdf" data-i18n="export_pdf">Exporter PDF</button>
+  </div>
+
+  <div style="display:flex;gap:16px;flex:1;overflow:hidden">
+    <div class="panel scroll" style="flex:1">
+      <table id="history-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th data-i18n="date_label">Date</th>
+            <th data-i18n="total">Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="history-body"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="sale-detail-panel" style="width:280px;overflow:auto">
+      <h3 id="detail-title"></h3>
+      <table id="detail-table">
+        <thead><tr><th data-i18n="name">Nom</th><th data-i18n="qty">Qté</th><th data-i18n="price">Prix</th></tr></thead>
+        <tbody id="detail-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════════════════════
+     PAGE: PARAMÈTRES
+══════════════════════════ -->
+<main id="page-settings" class="page">
+  <div class="panel" style="padding:0">
+    <div class="settings-grid">
+      <div>
+        <label data-i18n="lang_label">Langue</label>
+        <select id="sel-lang">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div>
+        <label data-i18n="theme_label">Thème</label>
+        <select id="sel-theme">
+          <option value="light" data-i18n="light">Clair</option>
+          <option value="dark" data-i18n="dark">Sombre</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
