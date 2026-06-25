@@ -64,12 +64,33 @@ function renderCatalogTable(rows) {
       <td>${esc(p.name)}</td>
       <td>${fmt(p.price)}</td>
       <td style="white-space:nowrap">
-        <button class="btn btn-ghost btn-sm" onclick="startEdit(${p.id})">${t('edit')}</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">${t('delete')}</button>
+        <button class="btn btn-ghost btn-sm catalog-edit-btn" data-id="${p.id}">${t('edit')}</button>
+        <button class="btn btn-danger btn-sm catalog-del-btn" data-id="${p.id}">${t('delete')}</button>
       </td>
     </tr>
   `).join('');
 }
+
+// Event delegation for catalog — no inline onclick needed
+$('catalog-body').addEventListener('click', async e => {
+  const editBtn = e.target.closest('.catalog-edit-btn');
+  const delBtn  = e.target.closest('.catalog-del-btn');
+  if (editBtn) {
+    const p = allProducts.find(x => x.id === Number(editBtn.dataset.id));
+    if (!p) return;
+    $('f-edit-id').value = p.id;
+    $('f-barcode').value = p.barcode || '';
+    $('f-name').value = p.name;
+    $('f-price').value = p.price;
+    $('product-form-panel').style.display = '';
+    $('f-name').focus();
+  }
+  if (delBtn) {
+    if (!confirm(t('confirm_delete'))) return;
+    await window.productsAPI.remove(Number(delBtn.dataset.id));
+    loadCatalog($('catalog-search').value);
+  }
+});
 
 $('catalog-search').addEventListener('input', e => loadCatalog(e.target.value));
 
@@ -115,22 +136,6 @@ $('product-form').addEventListener('submit', async e => {
   }
 });
 
-window.startEdit = async (id) => {
-  const p = allProducts.find(x => x.id === id);
-  if (!p) return;
-  $('f-edit-id').value = p.id;
-  $('f-barcode').value = p.barcode || '';
-  $('f-name').value = p.name;
-  $('f-price').value = p.price;
-  $('product-form-panel').style.display = '';
-  $('f-name').focus();
-};
-
-window.deleteProduct = async (id) => {
-  if (!confirm(t('confirm_delete'))) return;
-  await window.productsAPI.remove(id);
-  loadCatalog($('catalog-search').value);
-};
 
 $('btn-lookup').addEventListener('click', async () => {
   const barcode = $('f-barcode').value.trim();
