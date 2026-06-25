@@ -1,3 +1,4 @@
+(function () {
 const translations = {
   fr: {
     nav_catalog: 'Catalogue',
@@ -101,3 +102,4 @@ function t(key) {
 function getLang() { return currentLang; }
 
 window.i18n = { t, setLang, getLang };
+})();
