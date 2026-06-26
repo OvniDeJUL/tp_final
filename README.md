@@ -23,6 +23,12 @@ npm run build
 npm test
 ```
 
+## Screenshots
+
+| Catalogue & Caisse | Historique | Export PDF |
+|---|---|---|
+| ![Catalogue](docs/screenshots/screenshot-catalogue.png) | ![Historique](docs/screenshots/screenshot-historique.png) | ![PDF](docs/screenshots/screenshot-pdf.png) |
+
 ## Features
 
 - **Catalogue** — add/edit/delete products; barcode lookup via OpenFoodFacts API
