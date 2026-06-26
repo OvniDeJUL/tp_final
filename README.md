@@ -25,9 +25,9 @@ npm test
 
 ## Screenshots
 
-| Catalogue & Caisse | Historique | Export PDF |
-|---|---|---|
-| ![Catalogue](docs/screenshots/screenshot-catalogue.png) | ![Historique](docs/screenshots/screenshot-historique.png) | ![PDF](docs/screenshots/screenshot-pdf.png) |
+| Catalogue & Caisse                           | Historique                                     | Export PDF                              |
+| -------------------------------------------- | ---------------------------------------------- | --------------------------------------- |
+| ![Catalogue](docs/screenshots/catalogue.png) | ![Historique](docs/screenshots/historique.png) | ![PDF](docs/screenshots/export_pdf.png) |
 
 ## Features
 
